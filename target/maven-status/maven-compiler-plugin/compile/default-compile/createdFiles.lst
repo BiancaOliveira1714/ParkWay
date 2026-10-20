@@ -1,0 +1,5 @@
+br\com\parkway\Main.class
+br\com\parkway\Servidor.class
+br\com\parkway\VagaDAO.class
+br\com\parkway\Conexao.class
+br\com\parkway\Vaga.class
