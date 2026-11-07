@@ -1,315 +1,246 @@
-// Aqui a gente busca as vagas que estão no banco
+
+/* ==========================================
+   PARKWAY - CONTROLE DE VAGAS
+   Integração com API Java
+========================================== */
+
+let estacionamentoAtual = 1;
+
+/* ==========================================
+   ELEMENTOS DA PÁGINA
+========================================== */
+
+const parkingGrid = document.getElementById("parkingGrid");
+const estacionamentoSelect = document.getElementById("estacionamentoSelect");
+const totalVagasElement = document.getElementById("totalVagas");
+const vagasOcupadasElement = document.getElementById("vagasOcupadas");
+const vagasLivresElement = document.getElementById("vagasLivres");
+
+/* ==========================================
+   CARREGAR VAGAS
+========================================== */
+
 async function carregarVagas() {
+
+    if (!parkingGrid) {
+        console.error("Elemento parkingGrid não encontrado.");
+        return;
+    }
+
+    parkingGrid.innerHTML = `
+        <p class="map-loading">Carregando vagas...</p>
+    `;
 
     try {
 
-        const resposta =
-            await fetch("/api/vagas");
-
+        const resposta = await fetch(
+            `/api/vagas?estacionamento=${estacionamentoAtual}`
+        );
 
         if (!resposta.ok) {
-
-            throw new Error(
-                "Não foi possível buscar as vagas."
-            );
+            throw new Error("Não foi possível carregar as vagas.");
         }
 
+        const vagas = await resposta.json();
 
-        const vagas =
-            await resposta.json();
-
-
-        const lista =
-            document.getElementById(
-                "listaVagas"
-            );
-
-
-        lista.innerHTML = "";
-
-
-        let disponiveis = 0;
+        parkingGrid.innerHTML = "";
 
         let ocupadas = 0;
+        let livres = 0;
 
+        if (!Array.isArray(vagas) || vagas.length === 0) {
 
-        // Passa por cada vaga que veio do banco
+            parkingGrid.innerHTML = `
+                <p class="map-empty">
+                    Nenhuma vaga encontrada neste estacionamento.
+                </p>
+            `;
+
+            atualizarResumo(0, 0, 0);
+            return;
+        }
+
         vagas.forEach(vaga => {
 
-            const estaOcupada =
-                vaga.status === "OCUPADA";
+            const ocupada = vaga.status === "OCUPADA";
 
-
-            if (estaOcupada) {
-
+            if (ocupada) {
                 ocupadas++;
-
             } else {
-
-                disponiveis++;
-
+                livres++;
             }
 
+            const card = document.createElement("div");
 
-            const div =
-                document.createElement(
-                    "div"
-                );
+            card.className = ocupada
+                ? "parking-space occupied"
+                : "parking-space free";
 
+            const numeroVaga = String(vaga.numero).padStart(2, "0");
 
-            // Define a aparência da vaga
-            if (estaOcupada) {
+            card.innerHTML = `
+                <strong>V${numeroVaga}</strong>
 
-                div.className =
-                    "vaga ocupada-vaga";
+                <span class="vaga-status">
+                    ${ocupada ? "Ocupada" : "Disponível"}
+                </span>
 
-            } else {
-
-                div.className =
-                    "vaga disponivel-vaga";
-
-            }
-
-
-            // Monta o conteúdo da vaga
-            div.innerHTML = `
-
-                <div class="vaga-numero">
-
-                    Vaga ${vaga.numero}
-
-                </div>
-
-
-                <div class="status ${
-                    estaOcupada
-                        ? "ocupada"
-                        : "disponivel"
-                }">
-
-                    ${
-                        estaOcupada
-                            ? "Ocupada"
-                            : "Disponível"
-                    }
-
-                </div>
-
+                <small>
+                    ${ocupada
+                        ? "Esta vaga está ocupada."
+                        : "Esta vaga está livre."}
+                </small>
 
                 <button
                     class="botao-vaga"
-
-                    onclick="${
-                        estaOcupada
-                            ? `liberarVaga(${vaga.id})`
-                            : `ocuparVaga(${vaga.id})`
-                    }"
+                    type="button"
+                    ${ocupada ? "" : ""}
                 >
-
-                    ${
-                        estaOcupada
-                            ? "Liberar vaga"
-                            : "Ocupar vaga"
-                    }
-
+                    ${ocupada ? "Liberar vaga" : "Ocupar vaga"}
                 </button>
-
             `;
 
+            const botao = card.querySelector(".botao-vaga");
 
-            lista.appendChild(div);
+            botao.addEventListener("click", async () => {
+
+                botao.disabled = true;
+
+                if (ocupada) {
+                    await liberarVaga(vaga.id);
+                } else {
+                    await ocuparVaga(vaga.id);
+                }
+
+                botao.disabled = false;
+
+            });
+
+            parkingGrid.appendChild(card);
 
         });
 
-
-        atualizarNumeros(
-            vagas.length,
-            disponiveis,
-            ocupadas
-        );
-
+        atualizarResumo(vagas.length, ocupadas, livres);
 
     } catch (erro) {
 
-        console.error(
-            "Erro ao carregar as vagas:",
-            erro
-        );
+        console.error("Erro ao carregar vagas:", erro);
 
-
-        document.getElementById(
-            "listaVagas"
-        ).innerHTML = `
-
-            <div class="carregando">
-
-                Não foi possível carregar
-                as vagas.
-
-            </div>
-
+        parkingGrid.innerHTML = `
+            <p class="map-error">
+                Não foi possível carregar as vagas.
+                Verifique se o servidor Java está funcionando.
+            </p>
         `;
 
+        atualizarResumo(0, 0, 0);
+
     }
 
 }
 
+/* ==========================================
+   ATUALIZAR CONTADORES
+========================================== */
 
-// Atualiza os números da tela
-function atualizarNumeros(
-    total,
-    disponiveis,
-    ocupadas
-) {
+function atualizarResumo(total, ocupadas, livres) {
 
-    // Cards da parte das vagas
-    document.getElementById(
-        "totalVagas"
-    ).textContent = total;
-
-
-    document.getElementById(
-        "vagasDisponiveis"
-    ).textContent = disponiveis;
-
-
-    document.getElementById(
-        "vagasOcupadas"
-    ).textContent = ocupadas;
-
-
-    // Informações do dashboard inicial
-    document.getElementById(
-        "dashboardOcupadas"
-    ).textContent =
-        `${ocupadas} ocupadas`;
-
-
-    document.getElementById(
-        "dashboardTotal"
-    ).textContent =
-        `${total} vagas no total`;
-
-
-    document.getElementById(
-        "textoLivres"
-    ).textContent =
-        `${disponiveis} vagas livres`;
-
-
-    // Calcula a porcentagem de ocupação
-    let porcentagem = 0;
-
-
-    if (total > 0) {
-
-        porcentagem =
-            Math.round(
-                (ocupadas / total) * 100
-            );
-
+    if (totalVagasElement) {
+        totalVagasElement.textContent = total;
     }
 
+    if (vagasOcupadasElement) {
+        vagasOcupadasElement.textContent = ocupadas;
+    }
 
-    document.getElementById(
-        "porcentagem"
-    ).textContent =
-        `${porcentagem}%`;
-
-
-    // Atualiza a barra
-    document.getElementById(
-        "barraOcupacao"
-    ).style.width =
-        `${porcentagem}%`;
+    if (vagasLivresElement) {
+        vagasLivresElement.textContent = livres;
+    }
 
 }
 
+/* ==========================================
+   OCUPAR VAGA
+========================================== */
 
-// Aqui a gente ocupa uma vaga
 async function ocuparVaga(id) {
 
     try {
 
-        const resposta =
-            await fetch(
-                `/api/ocupar/${id}`
-            );
-
+        const resposta = await fetch(`/api/ocupar/${id}`, {
+            method: "POST"
+        });
 
         if (!resposta.ok) {
-
-            throw new Error(
-                "Erro ao ocupar a vaga."
-            );
-
+            throw new Error("Não foi possível ocupar a vaga.");
         }
 
-
-        // Atualiza a tela depois da alteração
         await carregarVagas();
-
 
     } catch (erro) {
 
-        console.error(
-            "Erro ao ocupar a vaga:",
-            erro
-        );
+        console.error("Erro ao ocupar vaga:", erro);
+
+        alert("Não foi possível ocupar esta vaga.");
 
     }
 
 }
 
+/* ==========================================
+   LIBERAR VAGA
+========================================== */
 
-// Aqui a gente libera uma vaga
 async function liberarVaga(id) {
 
     try {
 
-        const resposta =
-            await fetch(
-                `/api/liberar/${id}`
-            );
-
+        const resposta = await fetch(`/api/liberar/${id}`, {
+            method: "POST"
+        });
 
         if (!resposta.ok) {
-
-            throw new Error(
-                "Erro ao liberar a vaga."
-            );
-
+            throw new Error("Não foi possível liberar a vaga.");
         }
 
-
-        // Atualiza a tela depois da alteração
         await carregarVagas();
-
 
     } catch (erro) {
 
-        console.error(
-            "Erro ao liberar a vaga:",
-            erro
-        );
+        console.error("Erro ao liberar vaga:", erro);
+
+        alert("Não foi possível liberar esta vaga.");
 
     }
 
 }
 
+/* ==========================================
+   SELEÇÃO DE ESTACIONAMENTO
+========================================== */
 
-// Botões que levam para a área do sistema
-function irParaSistema() {
+if (estacionamentoSelect) {
 
-    document
-        .getElementById("sistema")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
+    estacionamentoSelect.addEventListener("change", () => {
+
+        estacionamentoAtual = Number(estacionamentoSelect.value);
+
+        carregarVagas();
+
+    });
 
 }
 
+/* ==========================================
+   INICIALIZAÇÃO
+========================================== */
 
-// Quando abrir a página,
-// carrega as vagas automaticamente
-carregarVagas();
+document.addEventListener("DOMContentLoaded", () => {
+
+    if (estacionamentoSelect) {
+        estacionamentoAtual = Number(estacionamentoSelect.value);
+    }
+
+    carregarVagas();
+
+});

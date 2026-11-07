@@ -1,0 +1,129 @@
+
+.clientes-page {
+    padding: 55px 0 80px;
+}
+
+.clientes-layout {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 20px;
+}
+
+.form-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(20, 45, 80, .05);
+}
+
+.form-card h3 {
+    color: #17365d;
+    margin-bottom: 18px;
+}
+
+.form-card label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 13px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #243247;
+}
+
+.form-card input {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d5dfeb;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 400;
+}
+
+.form-card input:focus {
+    outline: none;
+    border-color: #3476b9;
+    box-shadow: 0 0 0 3px rgba(52, 118, 185, .12);
+}
+
+.form-card hr {
+    border: 0;
+    border-top: 1px solid #e2e8f0;
+    margin: 20px 0;
+}
+
+.form-card button {
+    width: 100%;
+    margin-top: 8px;
+}
+
+#formMensagem {
+    margin-top: 12px;
+    font-size: 12px;
+}
+
+.cliente-item {
+    padding: 14px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.cliente-item strong {
+    display: block;
+    color: #17365d;
+}
+
+.cliente-item small {
+    display: block;
+    color: #66758a;
+    margin: 4px 0;
+}
+
+.cliente-item button {
+    width: auto;
+    padding: 8px 12px;
+}
+
+.historico-card {
+    margin-top: 22px;
+}
+
+.historico-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 12px;
+}
+
+.historico-table th,
+.historico-table td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.historico-table th {
+    color: #17365d;
+    background: #f7f9fc;
+}
+
+.status-aberto {
+    color: #16804a;
+    font-weight: 700;
+}
+
+.status-fechado {
+    color: #66758a;
+}
+
+@media (max-width: 800px) {
+
+    .clientes-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .historico-card {
+        overflow-x: auto;
+    }
+
+}

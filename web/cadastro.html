@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkWay | Cadastro de Entrada</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #17365d;
+            color: white;
+            padding: 22px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        header nav {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        header nav a:hover {
+            color: #93c5fd;
+        }
+
+        main {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .titulo {
+            margin-bottom: 25px;
+        }
+
+        .titulo h2 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .titulo p {
+            color: #64748b;
+        }
+
+        .formulario {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .secao {
+            margin-bottom: 30px;
+        }
+
+        .secao h3 {
+            color: #17365d;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .campo {
+            margin-bottom: 18px;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .campo input,
+        .campo select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+            outline: none;
+        }
+
+        .campo input:focus,
+        .campo select:focus {
+            border-color: #17365d;
+            box-shadow: 0 0 0 3px rgba(23, 54, 93, 0.12);
+        }
+
+        .linha {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .botao {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #17365d;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .botao:hover {
+            background: #244b7d;
+        }
+
+        .botao:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        #mensagem {
+            display: none;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        #mensagem.sucesso {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        #mensagem.erro {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .voltar {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #17365d;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            .linha {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .formulario {
+                padding: 22px;
+            }
+
+            main {
+                margin: 25px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>ParkWay</h1>
+
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/cadastro.html">Cadastrar entrada</a>
+    </nav>
+</header>
+
+<main>
+
+    <div class="titulo">
+        <h2>Cadastro de entrada</h2>
+        <p>Registre o cliente, o veículo e a entrada no estacionamento.</p>
+    </div>
+
+    <div id="mensagem"></div>
+
+    <form id="formCadastro" class="formulario">
+
+        <section class="secao">
+
+            <h3>Dados do cliente</h3>
+
+            <div class="campo">
+                <label for="nome">Nome completo *</label>
+                <input type="text" id="nome" name="nome"
+                       placeholder="Nome do cliente" required>
+            </div>
+
+            <div class="campo">
+                <label for="telefone">Telefone</label>
+                <input type="tel" id="telefone" name="telefone"
+                       placeholder="(15) 99999-9999">
+            </div>
+
+        </section>
+
+        <section class="secao">
+
+            <h3>Dados do veículo</h3>
+
+            <div class="linha">
+
+                <div class="campo">
+                    <label for="modelo">Modelo *</label>
+                    <input type="text" id="modelo" name="modelo"
+                           placeholder="Ex.: Honda Civic" required>
+                </div>
+
+                <div class="campo">
+                    <label for="cor">Cor</label>
+                    <input type="text" id="cor" name="cor"
+                           placeholder="Ex.: Preto">
+                </div>
+
+            </div>
+
+            <div class="campo">
+                <label for="placa">Placa *</label>
+                <input type="text" id="placa" name="placa"
+                       placeholder="ABC1D23"
+                       maxlength="7"
+                       style="text-transform: uppercase"
+                       required>
+            </div>
+
+        </section>
+
+        <section class="secao">
+
+            <h3>Estacionamento e vaga</h3>
+
+            <div class="campo">
+                <label for="estacionamento">Estacionamento *</label>
+
+                <select id="estacionamento" name="estacionamentoId" required>
+                    <option value="1">Estacionamento A - 12 vagas</option>
+                    <option value="2">Estacionamento B - 16 vagas</option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="vaga">Vaga disponível *</label>
+
+                <select id="vaga" name="vagaId" required>
+                    <option value="">Carregando vagas...</option>
+                </select>
+            </div>
+
+        </section>
+
+        <button type="submit" id="btnCadastrar" class="botao">
+            Registrar entrada
+        </button>
+
+        <a href="/" class="voltar">Voltar para o dashboard</a>
+
+    </form>
+
+</main>
+
+<footer>
+    ParkWay © 2026 - Sistema de gerenciamento de estacionamentos
+</footer>
+
+<script>
+    const estacionamento = document.getElementById("estacionamento");
+    const vaga = document.getElementById("vaga");
+    const formulario = document.getElementById("formCadastro");
+    const mensagem = document.getElementById("mensagem");
+    const botao = document.getElementById("btnCadastrar");
+
+    async function carregarVagas() {
+        const estacionamentoId = estacionamento.value;
+
+        vaga.innerHTML = '<option value="">Carregando vagas...</option>';
+        vaga.disabled = true;
+
+        try {
+            const resposta = await fetch(
+                `/api/vagas?estacionamento=${estacionamentoId}`
+            );
+
+            if (!resposta.ok) {
+                throw new Error("Erro ao carregar vagas.");
+            }
+
+            const vagas = await resposta.json();
+
+            vaga.innerHTML = "";
+
+            const vagasLivres = vagas.filter(
+                item => item.status === "LIVRE"
+            );
+
+            if (vagasLivres.length === 0) {
+                vaga.innerHTML =
+                    '<option value="">Nenhuma vaga disponível</option>';
+                return;
+            }
+
+            vaga.innerHTML =
+                '<option value="">Selecione uma vaga</option>';
+
+            vagasLivres.forEach(item => {
+                const opcao = document.createElement("option");
+
+                opcao.value = item.id;
+                opcao.textContent = `Vaga ${item.numero}`;
+
+                vaga.appendChild(opcao);
+            });
+
+        } catch (erro) {
+            vaga.innerHTML =
+                '<option value="">Erro ao carregar vagas</option>';
+
+            mostrarMensagem("Não foi possível carregar as vagas.", false);
+
+        } finally {
+            vaga.disabled = false;
+        }
+    }
+
+    function mostrarMensagem(texto, sucesso) {
+        mensagem.textContent = texto;
+        mensagem.className = sucesso ? "sucesso" : "erro";
+        mensagem.style.display = "block";
+
+        mensagem.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+
+    estacionamento.addEventListener("change", carregarVagas);
+
+    formulario.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        if (!vaga.value) {
+            mostrarMensagem("Selecione uma vaga disponível.", false);
+            return;
+        }
+
+        const dados = new URLSearchParams({
+            nome: document.getElementById("nome").value.trim(),
+            telefone: document.getElementById("telefone").value.trim(),
+            modelo: document.getElementById("modelo").value.trim(),
+            placa: document.getElementById("placa").value.trim().toUpperCase(),
+            cor: document.getElementById("cor").value.trim(),
+            estacionamentoId: estacionamento.value,
+            vagaId: vaga.value
+        });
+
+        botao.disabled = true;
+        botao.textContent = "Registrando entrada...";
+
+        try {
+            const resposta = await fetch("/api/entrada", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: dados
+            });
+
+            const resultado = await resposta.json();
+
+            if (resultado.sucesso) {
+                mostrarMensagem(resultado.mensagem, true);
+
+                formulario.reset();
+
+                await carregarVagas();
+
+            } else {
+                mostrarMensagem(resultado.mensagem, false);
+                await carregarVagas();
+            }
+
+        } catch (erro) {
+            mostrarMensagem("Erro ao conectar com o servidor.", false);
+
+        } finally {
+            botao.disabled = false;
+            botao.textContent = "Registrar entrada";
+        }
+    });
+
+    carregarVagas();
+</script>
+
+</body>
+</html>

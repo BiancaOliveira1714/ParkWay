@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ParkWay | Clientes</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="clientes.css">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="container nav">
+
+        <a class="logo" href="index.html">
+            Park<span>Way</span>
+        </a>
+
+        <nav>
+            <a href="index.html">Mapa de vagas</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="#historico">Histórico</a>
+        </nav>
+
+    </div>
+</header>
+
+<main class="container clientes-page">
+
+    <section class="section-title">
+        <span class="overline">CADASTRO</span>
+        <h2>Clientes e veículos</h2>
+        <p>Cadastre clientes e associe seus veículos.</p>
+    </section>
+
+    <div class="clientes-layout">
+
+        <!-- FORMULÁRIO -->
+        <form id="formCliente" class="form-card">
+
+            <h3>Novo cliente</h3>
+
+            <label>
+                Nome completo
+                <input name="nome" required maxlength="120">
+            </label>
+
+            <label>
+                CPF (opcional)
+                <input name="cpf" maxlength="14">
+            </label>
+
+            <label>
+                Telefone
+                <input name="telefone" maxlength="20">
+            </label>
+
+            <label>
+                E-mail
+                <input name="email" type="email" maxlength="120">
+            </label>
+
+            <hr>
+
+            <h3>Veículo</h3>
+
+            <label>
+                Placa
+                <input name="placa" required maxlength="10"
+                       placeholder="ABC1D23">
+            </label>
+
+            <label>
+                Modelo
+                <input name="modelo" maxlength="80">
+            </label>
+
+            <label>
+                Cor
+                <input name="cor" maxlength="40">
+            </label>
+
+            <button class="btn btn-primary" type="submit">
+                Cadastrar cliente
+            </button>
+
+            <p id="formMensagem" role="status"></p>
+
+        </form>
+
+        <!-- LISTAGEM -->
+        <section class="form-card">
+
+            <h3>Clientes cadastrados</h3>
+
+            <input
+                id="buscaCliente"
+                type="search"
+                placeholder="Buscar por nome, placa ou telefone"
+            >
+
+            <div id="listaClientes">
+                <p>Carregando clientes...</p>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- HISTÓRICO -->
+    <section id="historico" class="form-card historico-card">
+
+        <h3>Histórico de movimentações</h3>
+
+        <p>
+            Selecione um cliente na lista para consultar suas movimentações.
+        </p>
+
+        <div id="historicoCliente"></div>
+
+    </section>
+
+</main>
+
+<script src="clientes.js"></script>
+
+</body>
+</html>
